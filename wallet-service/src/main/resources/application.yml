@@ -1,0 +1,29 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: wallet-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/walletdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: root
+    hikari:
+      maximum-pool-size: 5        # hard cap of 5 DB connections
+      minimum-idle: 5
+      connection-timeout: 30000   # requests beyond 5 wait here for a connection (pile-up)
+      connection-init-sql: SET SESSION innodb_lock_wait_timeout=20   # how long a txn waits on a row lock
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: ${spring.application.name}      # every metric gets application="payment-service" etc.
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true

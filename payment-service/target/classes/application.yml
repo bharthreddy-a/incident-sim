@@ -1,0 +1,35 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: payment-service
+
+
+# ---- default simulation settings (lowest priority) ----
+# priority: application.yml  <  config/simulation.json  <  request body
+simulation:
+  wallet-base-url: http://localhost:8081
+  config-file: ./config/simulation.json
+  requests: 100              # n requests sent to wallet
+  concurrency: 20            # parallel callers to wallet
+  rows: [1, 2]               # DB rows the wallet will fight over
+  hold-ms: 2000              # how long each DB txn holds its row lock
+  cpu-burn-ms: 0             # optional CPU burn per request in wallet
+  memory-per-response-kb: 5120   # memory retained after EVERY wallet response
+  amount: 1.00
+  wallet-timeout-ms: 60000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: ${spring.application.name}      # every metric gets application="payment-service" etc.
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true

@@ -1,0 +1,6 @@
+{
+  "requests": 200,
+  "concurrency": 30,
+  "holdMs": 2000,
+  "memoryPerResponseKb": 5120
+}
